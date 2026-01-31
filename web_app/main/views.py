@@ -41,7 +41,10 @@ def recommend(request):
         selected_movie = request.POST.get('selected_movie')
         
         if movies.empty or similarity is None:
-             return render(request, 'main/index.html', {'error': 'Models not loaded.'})
+            return render(request, 'main/index.html', {
+                'movie_list': movies['title'].values if not movies.empty else [],
+                'error': 'Models not loaded. Please ensure artifacts are generated.'
+            })
 
         try:
             index = movies[movies['title'] == selected_movie].index[0]
@@ -69,9 +72,9 @@ def recommend(request):
             })
             
         except IndexError:
-             return render(request, 'main/index.html', {
-                 'movie_list': movies['title'].values,
-                 'error': 'Movie not found.'
-             })
+            return render(request, 'main/index.html', {
+                'movie_list': movies['title'].values,
+                'error': 'Movie not found.'
+            })
     
     return index(request)
