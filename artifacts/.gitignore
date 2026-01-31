@@ -1,2 +1,2 @@
-movie_list.pkl
-similarity.pkl
+movie_list.pkl     # stores movie list data
+similarity.pk      # stores similarity matrix
