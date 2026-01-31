@@ -138,6 +138,12 @@ dmypy.json
 configs/secrets.yaml
 
 # add your env folder here if its there
-
-
+# Custom Project Ignores
+artifacts/*.pkl
+data/*.csv
+data/*.zip
+*.pdf
+generate_models.py
+generate_pdf_report.py
+web_app/main/migrations/
 

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatch | AI-Powered Discovery</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100;300;400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <nav>
+        <div class="nav-container">
+            <a href="/" class="logo">
+                <i class="fas fa-clapperboard"></i> <span>CineMatch</span>
+            </a>
+            <div class="nav-links">
+                <a href="/"><i class="fas fa-house"></i> Home</a>
+                <a href="#"><i class="fas fa-fire"></i> Trending</a>
+                <a href="#"><i class="fas fa-bookmark"></i> My List</a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <span class="badge">Next Generation Recommendation</span>
+            <h1>The smarter way to find <span>Your Next Movie.</span></h1>
+            <p>Our AI analyzes deep patterns in content to suggest movies you'll actually love, not just what's popular.
+            </p>
+
+            <form action="{% url 'recommend' %}" method="post" class="search-box">
+                {% csrf_token %}
+                <div class="search-icon">
+                    <i class="fas fa-magnifying-glass"></i>
+                </div>
+                <select name="selected_movie" id="movie-select" required>
+                    <option value="" disabled selected>Select a movie category or title...</option>
+                    {% for movie in movie_list %}
+                    <option value="{{ movie }}">{{ movie }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="btn-recommend">
+                    Recommend AI <i class="fas fa-sparkles"></i>
+                </button>
+            </form>
+        </section>
+
+        {% if recommendations %}
+        <section class="results-wrapper">
+            <div class="section-header">
+                <div>
+                    <h2>Curated for <span>You</span></h2>
+                    <p>Based on your interest in "{{ selected_movie }}"</p>
+                </div>
+                <p><i class="fas fa-circle-info"></i> Found 5 perfect matches</p>
+            </div>
+
+            <div class="movie-grid">
+                {% for rec in recommendations %}
+                <div class="movie-card">
+                    <div class="poster-box">
+                        <img src="{{ rec.poster }}" alt="{{ rec.title }}" loading="lazy">
+                        <div class="card-rating">
+                            <i class="fas fa-star"></i> {{ rec.rating|floatformat:1 }}
+                        </div>
+                        <div class="overlay-info">
+                            <p class="tagline">Explore Details <i class="fas fa-arrow-right"></i></p>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h3>{{ rec.title }}</h3>
+                        <div class="meta">
+                            <span><i class="far fa-calendar"></i> {{ rec.year }}</span>
+                            <span><i class="far fa-clock"></i> 2h 15m</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+
+        {% if error %}
+        <div class="error-container"
+            style="max-width: 600px; margin: 2rem auto; padding: 1rem; background: rgba(244, 63, 94, 0.1); border: 1px solid var(--secondary); border-radius: 16px; text-align: center; color: var(--secondary);">
+            <i class="fas fa-circle-exclamation"></i> {{ error }}
+        </div>
+        {% endif %}
+    </main>
+
+    <footer
+        style="padding: 6rem 2rem; border-top: 1px solid var(--glass-border); text-align: center; margin-top: 8rem;">
+        <div style="margin-bottom: 2rem;">
+            <a href="/" class="logo" style="justify-content: center; font-size: 1.5rem;">
+                <i class="fas fa-clapperboard"></i> <span>CineMatch</span>
+            </a>
+        </div>
+        <p style="color: var(--text-dim); font-weight: 300;">© 2024 CineMatch AI Labs. Designed with <i
+                class="fas fa-heart" style="color: var(--secondary);"></i> by <span
+                style="color: #fff; font-weight: 600;">Monu Manish</span></p>
+    </footer>
+
+    <script>
+        // Smooth entrance for cards
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.movie-card').forEach((card, index) => {
+            card.style.transitionDelay = `${index * 0.1}s`;
+            observer.observe(card);
+        });
+    </script>
+</body>
+
+</html>

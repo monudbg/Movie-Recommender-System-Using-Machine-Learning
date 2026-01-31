@@ -91,12 +91,12 @@ here is a demo,
 Clone the repository
 
 ```bash
-https://github.com/entbappy/Movie-Recommender-System-Using-Machine-Learning.git
+https://github.com/monumanish/Movie-Recommender-System-Using-Machine-Learning.git
 ```
 ### STEP 01- Create a conda environment after opening the repository
 
 ```bash
-conda create -n movie python=3.7.10 -y
+conda create -n movie python=3.10 -y
 ```
 
 ```bash
@@ -118,13 +118,13 @@ Movie Recommender System Data Analysis.ipynb
 
 Now run,
 ```bash
-streamlit run app.py
+cd web_app
+python manage.py runserver
 ```
 
 
-```bash
-Author: Bappy Ahmed
-Data Scientist
-Email: entbappy73@gmail.com
 
+```bash
+Author: Monu Manish
+GitHub: https://github.com/monumanish
 ```

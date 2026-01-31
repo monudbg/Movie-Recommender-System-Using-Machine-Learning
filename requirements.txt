@@ -1,5 +1,9 @@
 ### dependency
-streamlit
+django
+pandas
+requests
+scikit-learn
+nltk
 
 ### local packages -
 -e . 
