@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: movie-recommender
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "cd web_app && gunicorn movie_recommender.wsgi:application --bind 0.0.0.0:$PORT"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.10.0
+      - key: DEBUG
+        value: "False"

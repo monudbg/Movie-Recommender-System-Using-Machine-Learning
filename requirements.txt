@@ -4,6 +4,8 @@ pandas
 requests
 scikit-learn
 nltk
+gunicorn
+whitenoise
 
 ### local packages -
--e . 
+-e .
