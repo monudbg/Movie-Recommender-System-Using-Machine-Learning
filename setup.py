@@ -7,7 +7,7 @@ with open("README.md", "r", encoding="utf-8") as f:
 REPO_NAME = "Movie-Recommender-System-Using-Machine-Learning"
 AUTHOR_USER_NAME = "monumanish"
 SRC_REPO = "src"
-LIST_OF_REQUIREMENTS = ['django', 'pandas', 'requests']
+LIST_OF_REQUIREMENTS = ["django", "pandas", "requests"]
 
 
 setup(
@@ -22,5 +22,5 @@ setup(
     packages=[SRC_REPO],
     license="MIT",
     python_requires=">=3.7",
-    install_requires=LIST_OF_REQUIREMENTS
+    install_requires=LIST_OF_REQUIREMENTS,
 )
