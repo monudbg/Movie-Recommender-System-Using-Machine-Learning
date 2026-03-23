@@ -1,0 +1,17 @@
+.git
+.gitignore
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.db.sqlite3
+.DS_Store
+*.ipynb
+Project_Flow_and_Concepts.pdf
+generate_pdf_report.py
+build.sh
+src/frontend/
+node_modules/
+staticfiles/
