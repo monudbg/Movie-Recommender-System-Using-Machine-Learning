@@ -1,116 +1,96 @@
-# Project: Movie Recommender System Using Machine Learning!
+# 🎬 Movie Recommender System
 
-<img src="demo/6.jpeg" alt="workflow" width="70%">
+### _Personalized Suggestions using Machine Learning & NLP_
 
-Recommendation systems are becoming increasingly important in today’s extremely busy world. People are always short on time with the myriad tasks they need to accomplish in the limited 24 hours. Therefore, the recommendation systems are important as they help them make the right choices, without having to expend their cognitive resources.
+![Project Demo](demo/1.png)
 
-The purpose of a recommendation system basically is to search for content that would be interesting to an individual. Moreover, it involves a number of factors to create personalised lists of useful and interesting content specific to each user/individual. Recommendation systems are Artificial Intelligence based algorithms that skim through all possible options and create a customized list of items that are interesting and relevant to an individual. These results are based on their profile, search/browsing history, what other people with similar traits/demographics are watching, and how likely are you to watch those movies. This is achieved through predictive modeling and heuristics with the data available.
+## 📌 Project Overview
 
-# Types of Recommendation System :
+This is a comprehensive **Content-Based Movie Recommendation System** built using Python and Django. By analyzing movie metadata (genres, keywords, cast, and crew), the system calculates the similarity between films to provide accurate "Top 10" recommendations based on a user's interest.
 
-### 1 ) Content Based :
+---
 
-- Content-based systems, which use characteristic information and takes item attriubutes into consideration .
+## 🔄 Project Flow: From Data to Recommendation
 
-- Twitter , Youtube .
+The system follows a structured pipeline to transform raw movie information into a smart recommendation engine:
 
-- Which music you are listening , what singer are you watching . Form embeddings for the features .
-- User specific actions or similar items reccomendation .
-- It will create a vector of it .
-- These systems make recommendations using a user's item and profile features. They hypothesize that if a user was interested in an item in the past, they will once again be interested in it in the future
-- One issue that arises is making obvious recommendations because of excessive specialization (user A is only interested in categories B, C, and D, and the system is not able to recommend items outside those categories, even though they could be interesting to them).
+1.  **Data Collection**: Loads the **TMDB 5000 Movies Dataset**, merging movie details with credits (cast and crew).
+2.  **Data Cleaning & Feature Engineering**:
+    - Extracts relevant information from complex JSON formats (like Genres and Cast).
+    - Combines "Overview", "Keywords", "Genres", "Cast", and "Crew" into a single **"Tags"** column.
+3.  **Preprocessing (NLP)**:
+    - **Stemming**: Reduces words to their root form (e.g., "loving", "loved" → "love") to improve matching.
+    - **Tokenization**: Breaks down sentences into individual words.
+4.  **Model Training**:
+    - **Vectorization**: Converts the "Tags" text into numerical vectors using Bag-of-Words (CountVectorizer).
+    - **Similarity Calculation**: Computes the **Cosine Similarity** between all 4,800+ movies to create a similarity matrix.
+5.  **Deployment**: The trained matrix is serialized with **Pickle** and served via a **Django** web application.
 
-### 2 ) Collaborative Based :
+---
 
-- Collaborative filtering systems, which are based on user-item interactions.
-- Clusters of users with same ratings , similar users .
-- Book recommendation , so use cluster mechanism .
-- We take only one parameter , ratings or comments .
-- In short, collaborative filtering systems are based on the assumption that if a user likes item A and another user likes the same item A as well as another item, item B, the first user could also be interested in the second item .
-- Issues are :
-  - User-Item nXn matrix , so computationally expensive .
+## 🧠 Complex Terms Simplified
 
-  - Only famous items will get reccomended .
+If you're new to Machine Learning, here are the core concepts explained simply:
 
-  - New items might not get reccomended at all .
+### 1. Content-Based Filtering
 
-### 3 ) Hybrid Based :
+Think of this as a "more of the same" strategy. If you like _Iron Man_, the system looks at its "content" (Action, Marvel, Robert Downey Jr.) and finds other movies with the most matching traits.
 
-- Hybrid systems, which combine both types of information with the aim of avoiding problems that are generated when working with just one kind.
+### 2. Vectorization (NLP)
 
-- Combination of both and used now a days .
+Computers don't understand words; they understand numbers. **Vectorization** is the process of turning a movie's "Tags" into a list of numbers (a vector). Each number represents how often a specific word appears in that movie's profile.
 
-- Uses : word2vec , embedding .
+### 3. Cosine Similarity
 
-# About this project:
+Imagine each movie is an arrow pointing in a specific direction in a giant multi-dimensional map. **Cosine Similarity** measures the _angle_ between these arrows.
 
-This is a Django web application that can recommend various kinds of similar movies based on an user interest.
-here is a demo,
+- **Angle is 0 (Similarity 1)**: The movies are identical.
+- **Angle is 90 (Similarity 0)**: The movies are completely different.
 
-# Demo:
+### 4. Pickle Serialization
 
-<img src="demo/1.png" alt="workflow" width="70%">
+Retraining the model every time a user visits the website would be slow. **Pickle** "freezes" the calculated similarity scores into a file so the website can load them instantly in under 200ms.
 
-<img src="demo/2.png" alt="workflow" width="70%">
+---
 
-<img src="demo/3.png" alt="workflow" width="70%">
+## 🛠️ Tech Stack
 
-# Dataset has been used:
+- **Language**: Python 3.10
+- **Libraries**: Pandas, NumPy, Scikit-learn (Machine Learning), NLTK (Natural Language Processing)
+- **Web Framework**: Django
+- **Deployment**: Docker, Hugging Face Spaces / Render
+- **Server**: Gunicorn & WhiteNoise
 
-- [Dataset link](https://www.kaggle.com/tmdb/tmdb-movie-metadata?select=tmdb_5000_movies.csv)
+---
 
-# Concept used to build the model.pkl file : cosine_similarity
+## 🚀 How to Run Locally
 
-1 . Cosine Similarity is a metric that allows you to measure the similarity of the documents.
-
-2 . In order to demonstrate cosine similarity function we need vectors. Here vectors are numpy array.
-
-3 . Finally, Once we have vectors, We can call cosine_similarity() by passing both vectors. It will calculate the cosine similarity between these two.
-
-4 . It will be a value between [0,1]. If it is 0 then both vectors are complete different. But in the place of that if it is 1, It will be completely similar.
-
-5 . For more details , check URL : https://www.learndatasci.com/glossary/cosine-similarity/
-
-# How to run?
-
-### STEPS:
-
-Clone the repository
+### Option A: Using Docker (Recommended)
 
 ```bash
-https://github.com/monumanish/Movie-Recommender-System-Using-Machine-Learning.git
+# Build the image
+docker build -t movie-recommender .
+
+# Run the container
+docker run -p 7860:7860 movie-recommender
 ```
 
-### STEP 01- Create a conda environment after opening the repository
+_The app will be available at `http://localhost:7860`_
 
-```bash
-conda create -n movie python=3.10 -y
-```
+### Option B: Manual Setup
 
-```bash
-conda activate movie
-```
+1.  **Create Environment**: `conda create -n movie python=3.10 -y`
+2.  **Activate**: `conda activate movie`
+3.  **Install Deps**: `pip install -r requirements.txt`
+4.  **Run Server**:
+    ```bash
+    cd web_app
+    python manage.py runserver
+    ```
 
-### STEP 02- install the requirements
+---
 
-```bash
-pip install -r requirements.txt
-```
+## 👨‍💻 Author
 
-```bash
-#run this file to generate the models
-
-Movie Recommender System Data Analysis.ipynb
-```
-
-Now run,
-
-```bash
-cd web_app
-python manage.py runserver
-```
-
-```bash
-Author: Monu Manish
-GitHub: https://github.com/monumanish
-```
+**Monu Manish**  
+[GitHub](https://github.com/monudbg) | [LinkedIn](https://www.linkedin.com/in/monu-manish/)
