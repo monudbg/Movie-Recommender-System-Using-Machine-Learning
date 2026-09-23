@@ -1,96 +1,137 @@
 # 🎬 Movie Recommender System
 
-### _Personalized Suggestions using Machine Learning & NLP_
-
-![Project Demo](demo/1.png)
-
-## 📌 Project Overview
-
-This is a comprehensive **Content-Based Movie Recommendation System** built using Python and Django. By analyzing movie metadata (genres, keywords, cast, and crew), the system calculates the similarity between films to provide accurate "Top 10" recommendations based on a user's interest.
+> **Movie Recommender System** is a full-stack, content-based recommendation platform built using **Python**, **Django**, **React.js**, **Scikit-Learn**, and **NLP (Natural Language Processing)**. Powered by the TMDB 5000 Movies Dataset, it features a vector similarity engine (`CountVectorizer` + `Cosine Similarity`) and automated poster/streaming link fetching via TMDB APIs with multi-level Django caching.
 
 ---
 
-## 🔄 Project Flow: From Data to Recommendation
+## 📌 Key Features
 
-The system follows a structured pipeline to transform raw movie information into a smart recommendation engine:
-
-1.  **Data Collection**: Loads the **TMDB 5000 Movies Dataset**, merging movie details with credits (cast and crew).
-2.  **Data Cleaning & Feature Engineering**:
-    - Extracts relevant information from complex JSON formats (like Genres and Cast).
-    - Combines "Overview", "Keywords", "Genres", "Cast", and "Crew" into a single **"Tags"** column.
-3.  **Preprocessing (NLP)**:
-    - **Stemming**: Reduces words to their root form (e.g., "loving", "loved" → "love") to improve matching.
-    - **Tokenization**: Breaks down sentences into individual words.
-4.  **Model Training**:
-    - **Vectorization**: Converts the "Tags" text into numerical vectors using Bag-of-Words (CountVectorizer).
-    - **Similarity Calculation**: Computes the **Cosine Similarity** between all 4,800+ movies to create a similarity matrix.
-5.  **Deployment**: The trained matrix is serialized with **Pickle** and served via a **Django** web application.
-
----
-
-## 🧠 Complex Terms Simplified
-
-If you're new to Machine Learning, here are the core concepts explained simply:
-
-### 1. Content-Based Filtering
-
-Think of this as a "more of the same" strategy. If you like _Iron Man_, the system looks at its "content" (Action, Marvel, Robert Downey Jr.) and finds other movies with the most matching traits.
-
-### 2. Vectorization (NLP)
-
-Computers don't understand words; they understand numbers. **Vectorization** is the process of turning a movie's "Tags" into a list of numbers (a vector). Each number represents how often a specific word appears in that movie's profile.
-
-### 3. Cosine Similarity
-
-Imagine each movie is an arrow pointing in a specific direction in a giant multi-dimensional map. **Cosine Similarity** measures the _angle_ between these arrows.
-
-- **Angle is 0 (Similarity 1)**: The movies are identical.
-- **Angle is 90 (Similarity 0)**: The movies are completely different.
-
-### 4. Pickle Serialization
-
-Retraining the model every time a user visits the website would be slow. **Pickle** "freezes" the calculated similarity scores into a file so the website can load them instantly in under 200ms.
+- **Full-Stack Architecture**: Responsive frontend integrated with Django REST API view controllers.
+- **NLP Feature Extraction**:
+  - Combined features (`overview`, `genres`, `keywords`, `cast`, `crew`) into unified metadata tags.
+  - Text normalization, whitespace removal, and **Porter Stemmer** root-word reduction.
+- **Vector Space Similarity Model**:
+  - `CountVectorizer` (Bag-of-Words) transforming textual profiles into 5,000-dimensional vectors.
+  - **Cosine Similarity** matrix calculation determining item distance across 4,800+ movies.
+- **High-Performance Inference**: Precalculated recommendation dictionaries serialized via **Pickle** for instant (<200ms) recommendation generation.
+- **Asynchronous TMDB API Integration**:
+  - Parallelized poster image loading using `ThreadPoolExecutor`.
+  - 30-day persistent caching via Django Cache framework.
+  - Live watch provider streaming link lookup (`flatrate` US providers).
 
 ---
 
-## 🛠️ Tech Stack
+## 🏗️ System Workflow
 
-- **Language**: Python 3.10
-- **Libraries**: Pandas, NumPy, Scikit-learn (Machine Learning), NLTK (Natural Language Processing)
-- **Web Framework**: Django
-- **Deployment**: Docker, Hugging Face Spaces / Render
-- **Server**: Gunicorn & WhiteNoise
-
----
-
-## 🚀 How to Run Locally
-
-### Option A: Using Docker (Recommended)
-
-```bash
-# Build the image
-docker build -t movie-recommender .
-
-# Run the container
-docker run -p 7860:7860 movie-recommender
+```
+[ TMDB 5000 Movies & Credits CSV ]
+                 │
+                 ▼
+[ Data Preprocessing & Cleaning ] ── (AST literal evaluation of JSON fields)
+                 │
+                 ▼
+[ Tag Generation & NLP Stemming ] ── (PorterStemmer: e.g., "loving", "loved" ──► "love")
+                 │
+                 ▼
+[ Bag-of-Words Vectorization ]    ── (CountVectorizer max_features=5000)
+                 │
+                 ▼
+[ Cosine Similarity Computation ] ── (Angle calculation across 5,000D space)
+                 │
+                 ▼
+[ Pickle Serialization ]           ── (Save to artifacts/movie_dict.pkl & recommendations.pkl)
+                 │
+                 ▼
+[ Django Web App Service Layer ]   ── (Parallel poster fetch + 30-day Django Cache)
 ```
 
-_The app will be available at `http://localhost:7860`_
+---
 
-### Option B: Manual Setup
+## 🛠️ Technology Stack
 
-1.  **Create Environment**: `conda create -n movie python=3.10 -y`
-2.  **Activate**: `conda activate movie`
-3.  **Install Deps**: `pip install -r requirements.txt`
-4.  **Run Server**:
-    ```bash
-    cd web_app
-    python manage.py runserver
-    ```
+| Layer | Technology | Usage |
+| :--- | :--- | :--- |
+| **Backend Framework** | Django 5.x | Web app serving, routing, API orchestration |
+| **Frontend UI** | HTML5, CSS3, JavaScript / React.js | Dynamic UI with live search & poster rendering |
+| **Machine Learning** | Scikit-Learn, NumPy, Pandas | Vectorization, Cosine similarity, Data wrangling |
+| **NLP** | NLTK (PorterStemmer), AST | Text tokenization & JSON string parsing |
+| **Caching & Async** | Django Cache, `concurrent.futures` | Parallel poster fetching & 30-day response caching |
+| **External API** | TMDB REST API v3 | Movie poster artwork & streaming platform links |
 
 ---
 
-## 👨‍💻 Author
+## 📁 Directory Structure & File Map
 
-**Monu Manish**  
-[GitHub](https://github.com/monudbg) | [LinkedIn](https://www.linkedin.com/in/monu-manish/)
+```text
+Movie-Recommender-System-Using-Machine-Learning/
+├── data/                                    # TMDB CSV datasets
+│   ├── tmdb_5000_movies.csv
+│   └── tmdb_5000_credits.csv
+├── artifacts/                               # Generated model artifacts (.pkl)
+│   ├── movie_dict.pkl                       # Pickled movie metadata dictionary
+│   ├── recommendations.pkl                  # Precalculated top-10 index mappings
+│   └── similarity.pkl                       # Raw 4800x4800 similarity matrix
+├── generate_models.py                       # ML pipeline script (Preprocessing & Vectorization)
+├── web_app/                                 # Django web application
+│   ├── manage.py                            # Django entry point
+│   └── main/                                # Primary app directory
+│       ├── views.py                         # Controller logic (TMDB fetching, caching, render)
+│       └── templates/main/index.html        # Frontend template
+├── Dockerfile                               # Containerization script
+└── requirements.txt                         # Python dependencies
+```
+
+---
+
+## ⚙️ Installation & Developer Guide
+
+### 1. Prerequisites
+- **Python 3.10+**
+- **Git**
+
+### 2. Environment Setup
+```bash
+# Clone the repository
+git clone https://github.com/monudbg/Movie-Recommender-System-Using-Machine-Learning.git
+cd Movie-Recommender-System-Using-Machine-Learning
+
+# Create & activate virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+### 3. Generate ML Models & Artifacts
+Run the preprocessing and vectorization script to create the `.pkl` files inside `artifacts/`:
+```bash
+python generate_models.py
+```
+
+### 4. Run Django Web Server
+```bash
+cd web_app
+python manage.py migrate
+python manage.py runserver
+```
+Open `http://127.0.0.1:8000/` in your browser.
+
+---
+
+## 👨‍💻 Developer Notes & Code Documentation
+
+- **`generate_models.py`**:
+  - `convert()` & `convert3()` parse JSON strings using `ast.literal_eval`.
+  - `PorterStemmer` reduces inflectional forms of words to common root stems.
+  - Precomputes the top-10 recommendation index map to eliminate runtime matrix multiplication overhead.
+- **`web_app/main/views.py`**:
+  - `fetch_poster()` & `fetch_watch_provider()` interface with TMDB API with 30-day Django file-based caching.
+  - `ThreadPoolExecutor` fetches posters in parallel to accelerate page rendering speeds.
+
+---
+
+## 📜 Author & License
+
+- **Monu Manish** (IIIT Una)
+- [GitHub](https://github.com/monudbg) | [LinkedIn](https://linkedin.com/in/monu-manish-64145428a)

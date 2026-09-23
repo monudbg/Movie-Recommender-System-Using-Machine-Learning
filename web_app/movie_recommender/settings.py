@@ -125,3 +125,16 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Django Cache Configuration
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.filebased.FileBasedCache",
+        "LOCATION": BASE_DIR / "django_cache",
+        "TIMEOUT": 86400 * 30,  # 30 days default
+        "OPTIONS": {
+            "MAX_ENTRIES": 10000
+        }
+    }
+}
+
